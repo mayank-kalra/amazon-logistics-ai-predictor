@@ -583,10 +583,14 @@ for name, model in models.items():
 	cm_df = pd.DataFrame(cm, 
 						 index=['Predicted: On-Time', 'Predicted: At Risk', 'Predicted: Delayed'],
 						 columns=['Actual: On-Time', 'Actual: At Risk', 'Actual: Delayed'])
-	print(cm_df)
-	print('\nClassification Report:\n', classification_report(y_test, preds, 
-													   target_names=['On-Time', 'At Risk', 'Delayed'],
-													   digits=4))
+	print('\nClassification Report:\n', classification_report(
+    y_test,
+    preds,
+    labels=[0, 1, 2],
+    target_names=['On-Time', 'At Risk', 'Delayed'],
+    digits=4,
+    zero_division=0
+))
 	p, r, f, _ = precision_recall_fscore_support(y_test, preds, average='macro')
 	print('Macro Precision: %.4f, Macro Recall: %.4f, Macro F1: %.4f' % (p, r, f))
 	acc = accuracy_score(y_test, preds)
