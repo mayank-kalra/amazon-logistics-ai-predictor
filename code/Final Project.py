@@ -12,8 +12,20 @@ warnings.filterwarnings('ignore')
 
 ''' Pre-processing the data '''
 
+import os
+
+# Set up project paths
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.dirname(script_dir) if os.path.basename(script_dir) == 'code' else script_dir
+figures_dir = os.path.join(project_root, 'assets', 'figures')
+os.makedirs(figures_dir, exist_ok=True)
+
+data_path = os.path.join(project_root, 'data', 'sample', 'logistics_clean_sample.csv')
+if not os.path.exists(data_path):
+    data_path = 'data/sample/logistics_clean_sample.csv'
+
 #importing the data 
-df = pd.read_excel('data/sample/logistics_clean_sample.csv')
+df = pd.read_excel(data_path)
 
 
 #preprocessing data 
@@ -67,7 +79,10 @@ for bar in bars:
             f'{int(height)}',
             ha='center', va='bottom', fontsize=11, fontweight='bold')
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "01_delay_distribution.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 # 2. Delayed vs non-delayed shipments across months
 fig, ax = plt.subplots(figsize=(13, 6))
@@ -85,7 +100,10 @@ ax.set_xticklabels(month_order, rotation=45, ha='right', fontsize=11)
 ax.tick_params(axis='y', labelsize=11)
 ax.legend(fontsize=12, loc='upper right')
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "02_delays_by_month.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 # 3. Grouped bar chart of Logistics_Delay counts segmented by Traffic_Status
 fig, ax = plt.subplots(figsize=(12, 6))
@@ -98,7 +116,10 @@ ax.legend(['No Delay', 'Delayed'], fontsize=12, title='Delay Status', title_font
 ax.tick_params(axis='x', labelsize=11, rotation=45)
 ax.tick_params(axis='y', labelsize=11)
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "03_delay_by_traffic.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 # 4. Box plot comparing Waiting_Time across the two Logistics_Delay classes
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -109,7 +130,10 @@ ax.set_xlabel("Delivery Status", fontsize=13, fontweight='bold')
 ax.set_ylabel("Waiting Time (hours)", fontsize=13, fontweight='bold')
 ax.tick_params(axis='both', labelsize=11)
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "04_waiting_time_by_delay.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 
 #dummifying the categorical variables and removing redundant variables for building a predictive model 
@@ -396,7 +420,7 @@ accuracies = [lr_acc, dt_acc, rf_acc]
 best_model_idx = accuracies.index(max(accuracies))
 best_models = ['Logistic Regression', 'Decision Tree', 'Random Forest']
 
-print(f"\n🏆 BEST MODEL: {best_models[best_model_idx]}")
+print(f"\nBEST MODEL: {best_models[best_model_idx]}")
 print(f"   Accuracy: {max(accuracies):.4f} ({max(accuracies)*100:.2f}%)")
 print("="*70 + "\n")
 
@@ -443,7 +467,10 @@ for bar in bars3:
             ha='center', va='bottom', fontsize=10, fontweight='bold')
 
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "05_binary_model_comparison.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 # Visualize confusion matrices for best model
 fig, axes = plt.subplots(1, 3, figsize=(14, 4))
@@ -465,7 +492,10 @@ for idx, (cm, title) in enumerate(matrices):
     ax.set_xlabel('Predicted', fontsize=10, fontweight='bold')
 
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "06_binary_confusion_matrices.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 print("Binary classification modeling complete.\n")
 
@@ -648,7 +678,10 @@ for i, bar in enumerate(bars):
 			f' {width:.4f}', ha='left', va='center', fontsize=10, fontweight='bold')
 
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "07_multiclass_model_comparison.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 # Confusion matrix for best model
 fig, ax = plt.subplots(figsize=(10, 7))
@@ -661,7 +694,10 @@ ax.set_title(f'Best Model Confusion Matrix: {best_model_name}', fontsize=14, fon
 ax.set_ylabel('Actual Status', fontsize=12, fontweight='bold')
 ax.set_xlabel('Predicted Status', fontsize=12, fontweight='bold')
 plt.tight_layout()
+
+plt.savefig(os.path.join(figures_dir, "08_multiclass_confusion_matrix.png"), dpi=300, bbox_inches="tight")
 plt.show()
+plt.close()
 
 print('='*70)
 print('Multi-class classification modeling complete!')
